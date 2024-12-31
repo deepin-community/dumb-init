@@ -1,0 +1,3 @@
+tests/*.pyc
+tests/*/*.pyc
+debian/dumb-init.1

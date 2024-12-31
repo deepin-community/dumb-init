@@ -1,4 +1,24 @@
 #!/usr/bin/make -f
 
+export DEB_BUILD_MAINT_OPTIONS = hardening=+all
+
 %:
 	dh $@
+
+MAN=debian/dumb-init.1
+
+$(MAN):
+	help2man \
+      --name 'a minimal init system for Linux containers' \
+      --no-discard-stderr \
+      --include debian/help2man \
+      --no-info \
+      ./dumb-init > $@
+
+override_dh_installman: $(MAN)
+	dh_installman
+
+override_dh_auto_test:
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	PATH=.:$$PATH py.test-3 tests/
+endif
